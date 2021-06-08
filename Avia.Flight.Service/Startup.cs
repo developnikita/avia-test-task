@@ -2,6 +2,7 @@ using Avia.Flight.Service.Entities;
 using Avia.Flight.Service.Models;
 using Avia.Flight.Service.Models.Extensions;
 using Avia.Flight.Service.Repositories;
+using Avia.Flight.Service.Settings;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -25,7 +26,8 @@ namespace Avia.Flight.Service
         {
             services.AddSingleton<IReadOnlyRepository<FlightInfo>>(serviceProvider =>
             {
-                return new CsvRepository<FlightInfoCsv, FlightInfo>("C:\\Users\\Nekit\\Desktop\\avia.csv", FlightExtension.AsEntity);
+                var csvFileLocation = Configuration.GetSection(nameof(CsvFileLocationSettings)).Get<CsvFileLocationSettings>();
+                return new CsvRepository<FlightInfoCsv, FlightInfo>(csvFileLocation.FileLocation, FlightExtension.AsEntity);
             });
 
             services.AddControllers();
