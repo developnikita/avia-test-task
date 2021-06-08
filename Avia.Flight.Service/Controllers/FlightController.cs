@@ -1,4 +1,12 @@
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using Avia.Flight.Service.Entities;
+using Avia.Flight.Service.Entities.Extensions;
 using Avia.Flight.Service.Models;
+using Avia.Flight.Service.Repositories;
+using CsvHelper;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Avia.Flight.Service.Controllers
@@ -7,14 +15,21 @@ namespace Avia.Flight.Service.Controllers
     [Route("flights")]
     public class FlightController : ControllerBase
     {
-        public FlightController()
+        public FlightController(IReadOnlyRepository<FlightInfo> flightInfoRepository)
         {
+            _flightInfoRepository = flightInfoRepository;
         }
 
         [HttpGet("{id}")]
         public ActionResult<FlightTimeInfoDto> GetById(int id)
         {
-            return new FlightTimeInfoDto("Какое-то название", new Time(10, 20), new Time(15, 0));
+            var result = _flightInfoRepository.Get(id);
+            if (result == null)
+                return BadRequest();
+
+            return Ok(result.AsDto());
         }
+
+        private readonly IReadOnlyRepository<FlightInfo> _flightInfoRepository;
     }
 }

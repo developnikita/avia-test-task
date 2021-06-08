@@ -1,3 +1,7 @@
+using Avia.Flight.Service.Entities;
+using Avia.Flight.Service.Models;
+using Avia.Flight.Service.Models.Extensions;
+using Avia.Flight.Service.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -19,6 +23,11 @@ namespace Avia.Flight.Service
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<IReadOnlyRepository<FlightInfo>>(serviceProvider =>
+            {
+                return new CsvRepository<FlightInfoCsv, FlightInfo>("C:\\Users\\Nekit\\Desktop\\avia.csv", FlightExtension.AsEntity);
+            });
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -47,5 +56,7 @@ namespace Avia.Flight.Service
                 endpoints.MapControllers();
             });
         }
+
+
     }
 }
