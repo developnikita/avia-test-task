@@ -6,6 +6,8 @@ Simple Rest Api service with one GET query /flights/:id
 
 Install last .NET SDK from [dotnet] 
 
+![alt text](dotnetSDK.png ".NET SDK")
+
 After install https certs using command 
 ```sh
 dotnet dev-certs https --trust
